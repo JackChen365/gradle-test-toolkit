@@ -1,6 +1,6 @@
 # Ktlint Gradle
 
-**Provides generate a gradle project for us to test your Gradle plugin**
+**Provides the function to generate a Gradle project for us to test your Gradle plugin**
 
 Latest plugin version: [1.0.0]
 
