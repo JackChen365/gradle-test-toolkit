@@ -1,0 +1,79 @@
+## Work flow name.
+name: Android Presubmits
+on:
+  pull_request:
+    branches:
+      - dev
+  push:
+    branches:
+      - dev
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set_matrix.outputs.matrix }}
+    steps:
+      - id: set_matrix
+        run: |
+          echo "::set-output name=matrix::{\"include\":[ \
+            {\"title\":\"test-plugin\",\"unittest_task\":\":test-plugin:check\",\"report_dir\":\"test-plugin/build/reports/tests\"}, \
+            {\"title\":\"test-toolkit\",\"unittest_task\":\":test-toolkit:check\",\"report_dir\":\"test-toolkit/build/reports/tests\"}]}"
+
+  unit-test:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
+    steps:
+      # Check out the repo.
+      - uses: actions/checkout@v3
+
+      - name: Restore Gradle caches
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/caches/files-2.1
+            ~/.gradle/caches/metadata-2.96
+          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle.kts') }}-${{ hashFiles('**/gradle.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-cache-
+
+      # Inspired by https://github.com/actions/cache/issues/432#issuecomment-740376179
+      - name: Restore TestKit cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            plugin/.gradle-test-kit/caches/modules-2
+            plugin/.gradle-test-kit/caches/files-2.1
+            plugin/.gradle-test-kit/caches/metadata-2.96
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}-
+            ${{ runner.os }}-gradle-wrapper-
+
+      - name: Restore Gradle wrapper
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-wrapper-
+
+      - name: Run unit test
+        id: unit_test
+        run: |
+          chmod +x ./gradlew
+          # ./gradlew ${{ matrix.unittest_task }} --no-daemon
+          zip -r report.zip ${{ matrix.report_dir }}
+          echo "::set-output name=report_file::report.zip"
+
+      # The retention period must be between 1 and 90 inclusive and the default retention days is 90. For more information see artifact and log retention policies.
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.title }}-report-artifact
+          path: ${{ steps.unit_test.outputs.report_file }}
