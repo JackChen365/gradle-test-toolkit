@@ -1,9 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val pluginGroup = "com.github.jackchen.gradle.toolkit"
-group = pluginGroup
-version = rootProject.projectDir.resolve("VERSION_CURRENT.txt").readText().trim()
-
 buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20")
@@ -14,6 +10,7 @@ plugins {
     kotlin("jvm")
     `maven-publish`
     id("org.jlleitschuh.gradle.ktlint")
+    id("com.vanniktech.maven.publish")
 }
 
 repositories {
