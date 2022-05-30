@@ -3,7 +3,7 @@
 [![jCenter](https://img.shields.io/badge/Kotlin-1.6.21-green.svg
 )](https://github.com/Foso/Sheasy/blob/master/LICENSE)
 
-# Ktlint Gradle
+# Gradle plugin test toolkit
 
 **Provides the function to generate a Gradle project for us to test your Gradle plugin**
 
