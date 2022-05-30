@@ -33,7 +33,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    testImplementation(project(":test-toolkit"))
+    testImplementation("io.github.jackchen365:gradle-test-toolkit:1.0.1")
 }
 ```
 
