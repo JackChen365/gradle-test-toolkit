@@ -172,5 +172,4 @@ internal class GradlePluginTestTest : GradlePluginTest() {
             Assertions.assertEquals(TaskOutcome.SUCCESS, task(":app:compileDebugJavaWithJavac")?.outcome)
         }
     }
-
 }

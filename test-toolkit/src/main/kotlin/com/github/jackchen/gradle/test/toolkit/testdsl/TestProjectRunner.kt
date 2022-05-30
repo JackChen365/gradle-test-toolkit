@@ -27,7 +27,6 @@ open class TestProjectRunner(
 
     init {
         // Prepare the test repo
-        testTempDir.deleteRecursively()
         projectDir = testTempDir
         if (!projectDir.exists()) {
             projectDir.mkdirs()

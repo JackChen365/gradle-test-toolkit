@@ -45,7 +45,7 @@ class GroovyAndroidTemplateProject(runner: TestProjectRunner) : TestAndroidTempl
                     |    }
                     |}
                     |dependencies {
-                    |${templateComposition.gradleTemplate.dependencyList.joinToString("\n") { "\t${it.configurationName} '${it.dependencyNotation}'" }}
+                    |${templateComposition.gradleTemplate.dependencyList.joinToString("\n") { "\t${it.configurationName} ${it.dependencyNotation}" }}
                     |}
                     """.trimMargin()
                 }

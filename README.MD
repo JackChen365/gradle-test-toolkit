@@ -2,7 +2,7 @@
 
 **Provides the function to generate a Gradle project for us to test your Gradle plugin**
 
-Latest plugin version: [1.0.0]
+Latest plugin version: [1.0.1]
 
 ## Table of content
 
@@ -31,7 +31,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    testImplementation(project(":test-toolkit"))
+    testImplementation("io.github.jackchen365:gradle-test-toolkit:1.0.1")
 }
 ```
 

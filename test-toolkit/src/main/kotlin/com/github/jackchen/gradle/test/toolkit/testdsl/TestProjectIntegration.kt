@@ -118,8 +118,12 @@ abstract class TestProjectIntegration {
 
     class TestModuleDSL(val name: String, projectDir: File) : TestDirDSL(File(projectDir, name)) {
         val moduleDir = File(projectDir, name).also { if (!it.exists()) it.mkdir() }
+        private var currentPackageName: String = ""
+
+        fun packageName() = currentPackageName
 
         fun sourceDir(packageName: String?, testDir: TestDirDSL.() -> Unit) {
+            currentPackageName = packageName ?: ""
             val currentDir = File(moduleDir, "src/main/kotlin/${packageName?.replace('.', '/')}")
             if (!currentDir.exists()) {
                 currentDir.mkdirs()
@@ -128,6 +132,7 @@ abstract class TestProjectIntegration {
         }
 
         fun kotlinSourceDir(packageName: String?, testDir: TestDirDSL.() -> Unit) {
+            currentPackageName = packageName ?: ""
             val currentDir = File(moduleDir, "src/main/kotlin/${packageName?.replace('.', '/')}")
             if (!currentDir.exists()) {
                 currentDir.mkdirs()

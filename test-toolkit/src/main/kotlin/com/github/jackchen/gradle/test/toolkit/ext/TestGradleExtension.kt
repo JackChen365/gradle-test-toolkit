@@ -38,26 +38,25 @@ class TestGradleExtension : BeforeEachCallback, AfterEachCallback {
             { field: Field -> field.type == TestProjectRunner::class.java },
             ReflectionUtils.HierarchyTraversalMode.TOP_DOWN
         )
+        val testWithCacheAnnotation = context.testMethod.get().getAnnotation(TestWithCache::class.java)
+            ?: context.testInstance.javaClass.getAnnotation(TestWithCache::class.java)
+        val withCache = null != testWithCacheAnnotation && testWithCacheAnnotation.value
         Preconditions.condition(fieldList.size == 1, "We can only use one test project for the test class.")
         fieldList.forEach { field ->
             predicate.test(field)
-            assertValidFieldCandidate(field)
-            // The annotation priority is:
+            assertValidFieldCandidate(field) // The annotation priority is:
             // 1. From the test class
             // 2. From the field (Here is mean our testProject)
-            val testGradleRunnerAnnotation =
-                testInstance.javaClass.getAnnotation(TestGradleRunner::class.java)
-                    ?: context.testMethod.get().annotations.firstOrNull { it is TestGradleRunner } as? TestGradleRunner
-            var gradleRunnerProvider = if (null != testGradleRunnerAnnotation) {
+            val testGradleRunnerAnnotation = testInstance.javaClass.getAnnotation(TestGradleRunner::class.java)
+                ?: context.testMethod.get().annotations.firstOrNull { it is TestGradleRunner } as? TestGradleRunner
+            val gradleRunnerProvider = if (null != testGradleRunnerAnnotation) {
                 testGradleRunnerAnnotation.value.java.getConstructor().newInstance()
-            } else DefaultGradleRunnerProvider()
-            // The annotation priority is:
-            // 1. From the test method
+            } else DefaultGradleRunnerProvider() // The annotation priority is: // 1. From the test method
             // 2. From the field (Here is mean our testProject)
             val testVersionAnnotation =
                 context.testMethod.get().annotations.firstOrNull { it is TestVersion } as? TestVersion
                     ?: field.getAnnotation(TestVersion::class.java)
-            var testVersions = if (null != testVersionAnnotation) TestVersions(
+            val testVersions = if (null != testVersionAnnotation) TestVersions(
                 supportedAndroidVersion = testVersionAnnotation.androidVersion,
                 supportedGradleVersion = testVersionAnnotation.gradleVersion,
                 supportedKotlinPluginVersion = testVersionAnnotation.kotlinVersion
@@ -66,6 +65,9 @@ class TestGradleExtension : BeforeEachCallback, AfterEachCallback {
             val testTempDirAnnotation = field.getAnnotation(TestTempDir::class.java)
             val testTempDir =
                 if (null != testTempDirAnnotation) File(testTempDirAnnotation.value) else File("build/tmp").apply { if (!exists()) mkdirs() }
+            if (!withCache) {
+                testTempDir.deleteRecursively()
+            }
             try {
                 ReflectionUtils.makeAccessible(field)[testInstance] =
                     TestProjectRunner(testVersions, gradleRunnerProvider, testTempDir)
@@ -83,6 +85,9 @@ class TestGradleExtension : BeforeEachCallback, AfterEachCallback {
             val testTempDirAnnotation = field.getAnnotation(TestTempDir::class.java)
             val testTempDir =
                 if (null != testTempDirAnnotation) File(testTempDirAnnotation.value) else File("build/tmp").apply { if (!exists()) mkdirs() }
+            if (!withCache) {
+                testTempDir.deleteRecursively()
+            }
             try {
                 ReflectionUtils.makeAccessible(field)[testInstance] = testTempDir
             } catch (t: Throwable) {
@@ -101,12 +106,18 @@ class TestGradleExtension : BeforeEachCallback, AfterEachCallback {
     private fun assertSupportedType(target: String, type: Class<*>) {
         if (type != TestProjectRunner::class.java) {
             throw ExtensionConfigurationException(
-                "Can only resolve [@[KtLintTest, @TestVersion and @TestTempDir] " + target + " of type " + TestProjectRunner::class.java.name + " but was: " + type.name
+                "Can only resolve [@[KtLintTest, @TestVersion and @TestTempDir] $target of type " + TestProjectRunner::class.java.name + " but was: " + type.name
             )
         }
     }
 
-    override fun afterEach(context: ExtensionContext) = cleanup(context)
+    override fun afterEach(context: ExtensionContext) {
+        val testWithCacheAnnotation = context.testMethod.get().getAnnotation(TestWithCache::class.java)
+            ?: context.testInstance.javaClass.getAnnotation(TestWithCache::class.java)
+        if (null == testWithCacheAnnotation || !testWithCacheAnnotation.value) {
+            cleanup(context)
+        }
+    }
 
     private fun cleanup(context: ExtensionContext) {
         val fieldList = ReflectionUtils.findFields(

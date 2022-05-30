@@ -55,7 +55,7 @@ import com.github.jackchen.gradle.test.toolkit.testdsl.TestProjectRunner
  * 1. [GroovyAndroidTemplateProject] use the traditional groovy script.
  * 2. [KotlinAndroidTemplateProject] use the module Kotlin script.
  *
- * Please check the TestClass: [GroovyAndroidTemplateProjectTest] and [KotlinAndroidTemplateProjectTest] to know how to use it.
+ * Please check the TestClass: GroovyAndroidTemplateProjectTest and KotlinAndroidTemplateProjectTest to know how to use it.
  *
  * @param runner The test project runner. This is where the Gradle runner executes the Gradle task.
  */
@@ -115,18 +115,26 @@ open class AndroidTemplateDSL(private val runner: TestProjectRunner) {
     }
 
     class Dependency(
-        val configurationName: String, val dependencyNotation: String
+        val configurationName: String,
+        val dependencyNotation: String
     )
 
     class DependencyHandler {
         val dependencyList = mutableListOf<Dependency>()
 
         fun implementation(dependencyNotation: String) {
-            dependencyList.add(Dependency("implementation", dependencyNotation))
+            dependencyList.add(Dependency("implementation", "\"$dependencyNotation\""))
+        }
+
+        @Suppress("unused")
+        fun files(vararg dependencyNotations: String) {
+            dependencyNotations.forEach { dependencyNotation ->
+                dependencyList.add(Dependency("implementation", "files(\"$dependencyNotation\")"))
+            }
         }
 
         fun testImplementation(dependencyNotation: String) {
-            dependencyList.add(Dependency("testImplementation", dependencyNotation))
+            dependencyList.add(Dependency("testImplementation", "\"$dependencyNotation\""))
         }
     }
 
