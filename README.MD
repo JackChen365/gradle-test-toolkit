@@ -1,10 +1,12 @@
 [![Version](https://img.shields.io/maven-central/v/io.github.jackchen365/gradle-test-toolkit)](https://search.maven.org/artifact/io.github.jackchen365/gradle-test-toolkit)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![jCenter](https://img.shields.io/badge/Kotlin-1.6.21-green.svg
+)](https://github.com/Foso/Sheasy/blob/master/LICENSE)
 
 # Ktlint Gradle
 
 **Provides the function to generate a Gradle project for us to test your Gradle plugin**
 
-Latest plugin version: [1.0.1]
 
 ## Table of content
 
