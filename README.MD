@@ -4,8 +4,6 @@
 
 **Provides the function to generate a Gradle project for us to test your Gradle plugin**
 
-Latest plugin version: [1.0.0]
-
 ## Table of content
 
 - [How to use](#how-to-use)
