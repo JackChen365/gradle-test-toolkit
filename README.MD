@@ -1,3 +1,5 @@
+[![Version](https://img.shields.io/maven-central/v/io.github.jackchen365/gradle-test-toolkit)](https://search.maven.org/artifact/io.github.jackchen365/gradle-test-toolkit)
+
 # Ktlint Gradle
 
 **Provides the function to generate a Gradle project for us to test your Gradle plugin**
