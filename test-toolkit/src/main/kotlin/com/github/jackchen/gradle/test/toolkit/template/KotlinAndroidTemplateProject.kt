@@ -14,7 +14,10 @@ class KotlinAndroidTemplateProject(runner: TestProjectRunner) : TestAndroidTempl
     }
 
     fun androidProject(closure: AndroidTemplateCompositionDSL.() -> Unit) {
-        val templateComposition = AndroidTemplateCompositionDSL(runner)
+        val templateComposition = object : AndroidTemplateCompositionDSL(runner) {
+            //Only process the template
+            override fun project(closure: TestProject.() -> Unit) = Unit
+        }
         closure(templateComposition)
 
         project {
@@ -123,5 +126,7 @@ class KotlinAndroidTemplateProject(runner: TestProjectRunner) : TestAndroidTempl
                 }
             }
         }
+        //Process the custom project file.
+        closure(AndroidTemplateCompositionDSL(runner))
     }
 }

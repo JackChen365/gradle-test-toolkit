@@ -12,6 +12,7 @@ import com.github.jackchen.gradle.test.toolkit.template.TestAndroidTemplateProje
 import com.github.jackchen.gradle.test.toolkit.testdsl.TestGradleProject
 import com.github.jackchen.gradle.test.toolkit.testdsl.TestProjectIntegration
 import com.github.jackchen.gradle.test.toolkit.testdsl.TestProjectRunner
+import io.github.jackchen___.test_toolkit.BuildConfig
 import org.gradle.testkit.runner.BuildResult
 import org.junit.jupiter.api.extension.ExtendWith
 import java.io.File
@@ -29,10 +30,6 @@ import java.io.FileNotFoundException
  */
 @ExtendWith(TestGradleExtension::class)
 abstract class GradlePluginTest {
-    companion object {
-        private const val DEFAULT_TEST_PLUGIN_VERSION = "1.0.0-SNAPSHOT"
-    }
-
     @TestTempDir
     @TestVersion
     @TestGradleRunner(DefaultGradleRunnerProvider::class)
@@ -40,11 +37,8 @@ abstract class GradlePluginTest {
     lateinit var projectDir: File
 
     fun testPluginVersion(): String {
-        val currentVersionFile = File("../VERSION_CURRENT.txt")
-        if (currentVersionFile.exists()) {
-            return File("../VERSION_CURRENT.txt").readText().trim()
-        }
-        return DEFAULT_TEST_PLUGIN_VERSION
+        //Mast be snapshot, otherwise the code change won't work because we use a local maven.
+        return "${BuildConfig.APP_VERSION}-SNAPSHOT"
     }
 
     fun kotlinVersion(): String = testProjectRunner.testVersions.supportedKotlinPluginVersion

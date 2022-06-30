@@ -12,10 +12,10 @@ import com.github.jackchen.gradle.test.toolkit.testdsl.TestProjectRunner
  */
 open class TestAndroidTemplateProject(runner: TestProjectRunner) : TestAndroidProject(runner) {
 
-    class AndroidTemplateCompositionDSL(private val runner: TestProjectRunner) {
+    open class AndroidTemplateCompositionDSL(private val runner: TestProjectRunner) {
         internal val gradleTemplate = AndroidTemplateDSL(runner)
 
-        fun project(closure: TestProject.() -> Unit) {
+        open fun project(closure: TestProject.() -> Unit) {
             val testProject = TestProject(runner)
             closure(testProject)
         }
