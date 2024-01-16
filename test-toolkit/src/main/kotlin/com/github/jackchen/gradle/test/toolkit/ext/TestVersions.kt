@@ -10,8 +10,8 @@ class TestVersions(
     val supportedKotlinPluginVersion: String = SUPPORTED_KOTLIN_PLUGIN_VERSION
 ) {
     companion object {
-        const val SUPPORTED_ANDROID_VERSION = "4.2.1"
-        const val SUPPORTED_GRADLE_VERSION = "6.9.1"
-        const val SUPPORTED_KOTLIN_PLUGIN_VERSION = "1.6.10"
+        const val SUPPORTED_ANDROID_VERSION = "8.2.0"
+        const val SUPPORTED_GRADLE_VERSION = "8.5"
+        const val SUPPORTED_KOTLIN_PLUGIN_VERSION = "1.9.21"
     }
 }

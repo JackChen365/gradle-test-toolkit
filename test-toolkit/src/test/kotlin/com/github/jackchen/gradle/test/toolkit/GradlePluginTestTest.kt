@@ -9,7 +9,7 @@ import java.io.File
 internal class GradlePluginTestTest : GradlePluginTest() {
 
     @Test
-    @TestVersion(androidVersion = "4.2.1", gradleVersion = "7.0", kotlinVersion = "1.5.21")
+    @TestVersion(androidVersion = "8.2.0", gradleVersion = "8.5", kotlinVersion = "1.9.21")
     fun androidProjectTest() {
         androidProject {
             module("app") {
@@ -92,7 +92,7 @@ internal class GradlePluginTestTest : GradlePluginTest() {
                 """
                 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
                 plugins {
-                    kotlin("jvm") version "1.6.20"
+                    kotlin("jvm") version "1.9.21"
                 }
                 group = "org.example"
                 version = "1.0-SNAPSHOT"
@@ -106,7 +106,7 @@ internal class GradlePluginTestTest : GradlePluginTest() {
                     useJUnitPlatform()
                 }
                 tasks.withType<KotlinCompile> {
-                    kotlinOptions.jvmTarget = "1.8"
+                    kotlinOptions.jvmTarget = "17"
                 }
                 """.trimIndent()
             }
@@ -139,8 +139,8 @@ internal class GradlePluginTestTest : GradlePluginTest() {
                     packageName = "com.android.test"
                 }
                 build {
-                    targetSdk = 31
-                    targetSdk = 31
+                    targetSdk = 34
+                    targetSdk = 34
                     minSdk = 21
                 }
                 properties {
@@ -168,8 +168,8 @@ internal class GradlePluginTestTest : GradlePluginTest() {
         build(":app:processDebugResources") {
             Assertions.assertEquals(TaskOutcome.SUCCESS, task(":app:processDebugResources")?.outcome)
         }
-        build(":app:compileDebugJavaWithJavac") {
-            Assertions.assertEquals(TaskOutcome.SUCCESS, task(":app:compileDebugJavaWithJavac")?.outcome)
+        build(":app:compileDebugKotlin") {
+            Assertions.assertEquals(TaskOutcome.SUCCESS, task(":app:compileDebugKotlin")?.outcome)
         }
     }
 }

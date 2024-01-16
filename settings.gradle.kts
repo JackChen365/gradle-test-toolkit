@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        maven("https://maven.aliyun.com/repository/gradle-plugin")
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -8,7 +9,7 @@ pluginManagement {
     }
 }
 
-enableFeaturePreview("VERSION_CATALOGS")
+// enableFeaturePreview("VERSION_CATALOGS")
 rootProject.name = "gradle-test-toolkit"
 rootProject.buildFileName = "build.gradle.kts"
 include(":test-toolkit", ":test-plugin")

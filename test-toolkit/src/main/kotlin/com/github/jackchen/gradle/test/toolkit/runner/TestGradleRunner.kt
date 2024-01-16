@@ -25,7 +25,7 @@ import kotlin.reflect.KClass
  *     }
  * </p>
  */
-@Target(AnnotationTarget.TYPE, AnnotationTarget.FIELD)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class TestGradleRunner(
     /**

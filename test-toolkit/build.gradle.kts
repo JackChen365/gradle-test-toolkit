@@ -11,7 +11,7 @@ plugins {
     `maven-publish`
     id("org.jlleitschuh.gradle.ktlint")
     id("com.vanniktech.maven.publish")
-    id("com.github.gmazzo.buildconfig") version "3.1.0"
+    id("com.github.gmazzo.buildconfig")
 }
 
 repositories {
@@ -21,7 +21,7 @@ repositories {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 
@@ -42,19 +42,7 @@ dependencies {
 }
 
 buildConfig {
-    buildConfigField(
-        "String",
-        "APP_NAME",
-        "\"${project.name}\""
-    )
-    buildConfigField(
-        "String",
-        "APP_VERSION",
-        provider {
-            val projectVersion = file("../gradle.properties").readLines().find { it.startsWith("VERSION_NAME") }?.substringAfterLast("=")
-            "\"${projectVersion}\""
-        }
-    )
+    buildConfigField(String::class.java, "APP_VERSION", rootProject.extra["VERSION_NAME"].toString())
 }
 
 ktlint {

@@ -61,9 +61,11 @@ import com.github.jackchen.gradle.test.toolkit.testdsl.TestProjectRunner
  */
 open class AndroidTemplateDSL(private val runner: TestProjectRunner) {
     companion object {
-        private const val APP_COMPILESDK_VALUE = 31
+        private const val APP_DEFAULT_NAMESPACE = "com.android.test"
+        private const val APP_COMPILESDK_VALUE = 34
         private const val APP_MINSDK_VALUE = 21
-        private const val APP_TARGETSDK_VALUE = 31
+        private const val APP_TARGETSDK_VALUE = 34
+        private const val APP_JVM_VERSION = "11"
     }
 
     var packageInfo = PackageSpecScope().apply {
@@ -71,6 +73,9 @@ open class AndroidTemplateDSL(private val runner: TestProjectRunner) {
         packageName = "com.android.test"
     }
     var buildInfo = BuildSpecScope()
+    var pluginsBlock: String = ""
+    var androidBlock: String = ""
+    var dependencyBlock: String = ""
     var propertySet = mutableSetOf<String>().apply {
         add("android.useAndroidX=true")
     }
@@ -91,9 +96,14 @@ open class AndroidTemplateDSL(private val runner: TestProjectRunner) {
     }
 
     class BuildSpecScope {
+        var namespace: String = APP_DEFAULT_NAMESPACE
         var compileSdk: Int = APP_COMPILESDK_VALUE
         var minSdk = APP_MINSDK_VALUE
         var targetSdk = APP_TARGETSDK_VALUE
+        var jvmVersion = APP_JVM_VERSION
+
+        var versionName = "1.0"
+        var versionCode = 1
     }
 
     class PluginSpecScope {
@@ -103,6 +113,10 @@ open class AndroidTemplateDSL(private val runner: TestProjectRunner) {
             val plugin = Plugin(id)
             plugins.add(plugin)
             return PluginVersion(plugin)
+        }
+
+        fun testId(id: String): Plugin {
+            return Plugin(id)
         }
 
         class PluginVersion(private val plugin: Plugin) {
@@ -163,6 +177,18 @@ open class AndroidTemplateDSL(private val runner: TestProjectRunner) {
         val buildInfo = BuildSpecScope()
         closure(buildInfo)
         this.buildInfo = buildInfo
+    }
+
+    fun pluginsBlock(block: () -> String) {
+        pluginsBlock = block()
+    }
+
+    fun androidBlock(block: () -> String) {
+        androidBlock = block()
+    }
+
+    fun dependencyBlock(block: () -> String) {
+        dependencyBlock = block()
     }
 
     fun repositories(closure: RepositoryHandler.() -> Unit) {

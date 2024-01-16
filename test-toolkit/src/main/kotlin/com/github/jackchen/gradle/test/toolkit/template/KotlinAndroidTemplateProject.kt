@@ -23,34 +23,39 @@ class KotlinAndroidTemplateProject(runner: TestProjectRunner) : TestAndroidTempl
         project {
             module("app") {
                 file("build.gradle.kts") {
+                    val jvmVersion = templateComposition.gradleTemplate.buildInfo.jvmVersion
                     """
                     |plugins {
                     |${templateComposition.gradleTemplate.pluginSet.joinToString("\n") { "\tid(\"${it.id}\")" }}
+                    |${templateComposition.gradleTemplate.pluginsBlock}
                     |}
                     |
                     |android {
+                    |    namespace = "${templateComposition.gradleTemplate.buildInfo.namespace}"
                     |    compileSdk = ${templateComposition.gradleTemplate.buildInfo.compileSdk}
                     |
                     |    defaultConfig {
                     |        applicationId = "${templateComposition.gradleTemplate.packageInfo.packageName}"
                     |        minSdk = ${templateComposition.gradleTemplate.buildInfo.minSdk}
                     |        targetSdk = ${templateComposition.gradleTemplate.buildInfo.targetSdk}
-                    |        versionCode = 1
-                    |        versionName = "1.0"
+                    |        versionCode = ${templateComposition.gradleTemplate.buildInfo.versionCode}
+                    |        versionName = "${templateComposition.gradleTemplate.buildInfo.versionName}"
                     |
                     |        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                     |    }
                     |    compileOptions {
-                    |        sourceCompatibility = JavaVersion.VERSION_1_8
-                    |        targetCompatibility = JavaVersion.VERSION_1_8
+                    |        sourceCompatibility = JavaVersion.VERSION_${jvmVersion.replace(".", "_")}
+                    |        targetCompatibility = JavaVersion.VERSION_${jvmVersion.replace(".", "_")}
                     |    }
                     |    kotlinOptions {
-                    |        jvmTarget = "1.8"
+                    |        jvmTarget = "$jvmVersion"
                     |    }
+                    |${templateComposition.gradleTemplate.androidBlock}
                     |}
                     |
                     |dependencies {
                     |${templateComposition.gradleTemplate.dependencyList.joinToString("\n") { "\t${it.configurationName}(${it.dependencyNotation})" }}
+                    |${templateComposition.gradleTemplate.dependencyBlock}
                     |}
                     """.trimMargin()
                 }
@@ -67,9 +72,7 @@ class KotlinAndroidTemplateProject(runner: TestProjectRunner) : TestAndroidTempl
                     file("AndroidManifest.xml") {
                         """
                         |<?xml version="1.0" encoding="utf-8"?>
-                        |<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-                        |    package="${templateComposition.gradleTemplate.packageInfo.packageName}">
-                        |
+                        |<manifest xmlns:android="http://schemas.android.com/apk/res/android">
                         |    <application
                         |        android:allowBackup="true"
                         |        android:label="${templateComposition.gradleTemplate.packageInfo.name}"

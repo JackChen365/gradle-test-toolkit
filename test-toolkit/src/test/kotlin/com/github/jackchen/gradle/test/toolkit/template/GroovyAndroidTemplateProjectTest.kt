@@ -15,8 +15,8 @@ internal class GroovyAndroidTemplateProjectTest : GradlePluginTest() {
                     packageName = "com.android.test"
                 }
                 build {
-                    targetSdk = 31
-                    targetSdk = 31
+                    compileSdk = 34
+                    targetSdk = 34
                     minSdk = 21
                 }
                 properties {
@@ -27,8 +27,8 @@ internal class GroovyAndroidTemplateProjectTest : GradlePluginTest() {
                     repo("mavenCentral()")
                 }
                 plugins {
-                    id("com.android.application").version("4.2.0")
-                    id("org.jetbrains.kotlin.android").version("1.6.21")
+                    id("com.android.application").version("8.2.0")
+                    id("org.jetbrains.kotlin.android").version("1.9.21")
                 }
                 dependencies {
                     implementation("androidx.core:core-ktx:1.7.0")

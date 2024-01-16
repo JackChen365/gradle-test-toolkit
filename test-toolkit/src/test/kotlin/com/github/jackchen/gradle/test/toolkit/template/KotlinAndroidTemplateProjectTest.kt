@@ -15,8 +15,8 @@ internal class KotlinAndroidTemplateProjectTest : GradlePluginTest() {
                     packageName = "com.android.test"
                 }
                 build {
-                    targetSdk = 31
-                    targetSdk = 31
+                    compileSdk = 34
+                    targetSdk = 34
                     minSdk = 21
                 }
                 properties {
@@ -27,8 +27,8 @@ internal class KotlinAndroidTemplateProjectTest : GradlePluginTest() {
                     repo("mavenCentral()")
                 }
                 plugins {
-                    id("com.android.application").version("4.2.0")
-                    id("org.jetbrains.kotlin.android").version("1.6.21")
+                    id("com.android.application").version("8.2.0")
+                    id("org.jetbrains.kotlin.android").version("1.9.21")
                 }
                 dependencies {
                     implementation("androidx.core:core-ktx:1.7.0")
@@ -45,11 +45,12 @@ internal class KotlinAndroidTemplateProjectTest : GradlePluginTest() {
                             	id("build.config.hook")
                             }
                             android {
-                                compileSdk = 31
+                                namespace = "com.android.test"
+                                compileSdk = 34
                                 defaultConfig {
                                     applicationId = "com.android.test"
                                     minSdk = 21
-                                    targetSdk = 31
+                                    targetSdk = 34
                                     versionCode = 1
                                     versionName = "1.0"
 
